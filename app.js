@@ -1,58 +1,11 @@
 // Use prompts from Inquirer
 const inquirer = require('inquirer');
 
-// Allow app.js file to access the fs module's functions through the fs assignment
-const fs = require('fs');
-
 //Import generatePage function from page-template.js
 const generatePage = require('./src/page-template.js');
 
-// //Mock data for project testing
-// const mockData = {
-//     name: 'Lernantino',
-//     github: 'lernantino',
-//     confirmAbout: true,
-//     about:
-//       'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et.',
-//     projects: [
-//       {
-//         name: 'Run Buddy',
-//         description:
-//           'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et. Nam fringilla elit dapibus pellentesque cursus.',
-//         languages: ['HTML', 'CSS'],
-//         link: 'https://github.com/lernantino/run-buddy',
-//         feature: true,
-//         confirmAddProject: true
-//       },
-//       {
-//         name: 'Taskinator',
-//         description:
-//           'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et. Nam fringilla elit dapibus pellentesque cursus.',
-//         languages: ['JavaScript', 'HTML', 'CSS'],
-//         link: 'https://github.com/lernantino/taskinator',
-//         feature: true,
-//         confirmAddProject: true
-//       },
-//       {
-//         name: 'Taskmaster Pro',
-//         description:
-//           'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque. Nulla eget fringilla nulla. Integer gravida magna mi, id efficitur metus tempus et. Nam fringilla elit dapibus pellentesque cursus.',
-//         languages: ['JavaScript', 'jQuery', 'CSS', 'HTML', 'Bootstrap'],
-//         link: 'https://github.com/lernantino/taskmaster-pro',
-//         feature: false,
-//         confirmAddProject: true
-//       },
-//       {
-//         name: 'Robot Gladiators',
-//         description:
-//           'Duis consectetur nunc nunc. Morbi finibus non sapien nec pharetra. Fusce nec dignissim orci, ac interdum ipsum. Morbi mattis justo sed commodo pellentesque.',
-//         languages: ['JavaScript'],
-//         link: 'https://github.com/lernantino/robot-gladiators',
-//         feature: false,
-//         confirmAddProject: false
-//       }
-//     ]
-// };
+//Import writeFile and copyFile functions from generate-site.js
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 
 //Function to ask questions to user
 const promptUser = () => {
@@ -184,19 +137,25 @@ const promptProject = portfolioData => {
     });
   };
 
-  // Mock data testing
-//   const pageHTML = generatePage(mockData);
+  promptUser()
+  .then(promptProject)
+  .then(portfolioData => {
+    return generatePage(portfolioData);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
+  .then(writeFileResponse => {
+    console.log(writeFileResponse);
+    return copyFile();
+  })
+  .then(copyFileResponse => {
+    console.log(copyFileResponse);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
-promptUser()
-.then(promptProject)
-.then(portfolioData => {
-    const pageHTML = generatePage(portfolioData);
-
-    fs.writeFile('./index.html', pageHTML, err => {
-      if (err) throw new Error(err);
-
-    });
-});
 
 
 
